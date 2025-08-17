@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday!</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8cdda, #1d2b64);
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      padding: 50px;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.5em;
+      text-shadow: 0 0 10px #ff6f91;
+    }
+    p {
+      font-size: 1.5rem;
+      margin-bottom: 2em;
+    }
+    
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ✅ Make background fullscreen & fixed */
+    .background-fade {
+      position: fixed;   /* instead of absolute */
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('10_5_1.jpg') no-repeat;
+      background-size: cover;
+      background-position: 0px -80px;
+      opacity: 0;
+      transition: opacity 0.2s linear;
+      z-index: -1;
+    }
+
+    .image-row {
+  display: flex;
+  justify-content: center;
+  gap: 20px;          /* spacing between images */
+  margin-bottom: 60px;
+  flex-wrap: wrap;    /* ✅ makes them wrap on small screens */
+}
+
+.image-row img {
+  max-width: 250px;   /* adjust size */
+  border-radius: 20px;
+  box-shadow: 0 0 15px #ff6f91;
+}
+    .scroll-section {
+      position: relative;
+      height: 120vh;              
+      display: flex;
+      justify-content: center;   
+      align-items: center;         
+      flex-direction: column;
+      padding-bottom: 120px;       
+      overflow: hidden;
+      text-align: center;          
+    }
+
+    .calendar-link {
+      color: red;
+      font-weight: bold;
+      font-size: 1.8rem;
+      text-decoration: none;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Happy Birthday, Ananya! 🎉❤️</h1>
+  <p>Wishing you a day full of happiness and a year full of joy.</p>
+
+  <div class="image-row">
+    <img src="title_1.jpg" alt="Birthday Cake" />
+    <img src="title_2.jpg" alt="Friends" />
+    <img src="title_3.jpg" alt="Celebration" />
+  </div>
+
+  <!-- ✅ Move background-fade outside section -->
+  <div class="background-fade" id="bgFade"></div>
+
+  <div class="scroll-section" id="scrollSection">
+    <a href="calender.html" target="_blank" class="calendar-link" id="calendarLink">
+      View Our Special Dates Calendar
+    </a>
+  </div>
+
+  <canvas class="confetti"></canvas>
+
+  <script>
+    // Confetti code (unchanged)
+    const canvas = document.querySelector('.confetti');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+
+    function resize() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    class Confetti {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height - height;
+        this.size = Math.random() * 7 + 3;
+        this.speed = Math.random() * 3 + 2;
+        this.color = `hsl(${Math.random() * 360}, 100%, 65%)`;
+        this.tilt = Math.random() * 10 - 10;
+        this.tiltSpeed = Math.random() * 0.1 + 0.05;
+      }
+      update() {
+        this.y += this.speed;
+        this.tilt += this.tiltSpeed;
+        if (this.y > height) {
+          this.y = -this.size;
+          this.x = Math.random() * width;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.lineWidth = this.size / 2;
+        ctx.strokeStyle = this.color;
+        ctx.moveTo(this.x + this.tilt, this.y);
+        ctx.lineTo(this.x, this.y + this.tilt + this.size / 2);
+        ctx.stroke();
+      }
+    }
+
+    let confettis = [];
+    for(let i = 0; i < 100; i++) {
+      confettis.push(new Confetti());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      confettis.forEach(c => {
+        c.update();
+        c.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Gradual fade effect on scroll
+    const section = document.getElementById('scrollSection');
+    const bgFade = document.getElementById('bgFade');
+    const link = document.getElementById('calendarLink');
+
+    window.addEventListener('scroll', () => {
+      const rect = section.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+
+      let progress = 1 - (rect.top / windowHeight);
+      progress = Math.max(0, Math.min(1, progress));
+
+      // ✅ Background fades into full opacity
+      bgFade.style.opacity = progress;
+
+      if (progress > 0.5) {
+        link.style.opacity = (progress - 0.5) * 2;
+        link.style.transform = `scale(${0.5 + (progress - 0.5)})`;
+      }
+    });
+  </script>
+
+</body>
+</html>

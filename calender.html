@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Our Special Dates Calendar 2025</title>
+
+<div id="welcome-screen">
+  <h1 style="font-size: 3rem; margin: 0;">The best part of my life</h1>
+</div>
+
+<style>
+ html, body {
+  height: 100%;
+  margin: 0;
+  background: #f9f9f9;
+  font-family: Arial, sans-serif;
+  color: #800020;
+  opacity: 0;
+  animation: fadeInPage 1s ease forwards;
+}
+
+@keyframes fadeInPage {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Make the month container fill entire viewport width and height */
+.month-container {
+  margin-bottom: 0;
+  height: auto;      /* change from 100vh to auto */
+  width: auto;       /* change from 100vw to auto */
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: visible; /* or remove overflow-y */
+}
+
+
+/* Center the month title */
+.month-title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #b3003b;
+  text-align: center;
+}
+
+/* Make calendar grid stretch to fill width */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Style day names and dates to fill their grid cell */
+.day-name, .date {
+  padding: 12px 0;
+  border: 1px solid #f8a1c2;
+  user-select: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.day-name {
+  background: #cc0044;
+  color: white;
+}
+
+.date.empty {
+  background: #ffe6f2;
+  border: none;
+}
+
+.date {
+  position: relative;
+  background: #ffe6f2;
+  cursor: default;
+}
+
+.date.special {
+  background: #ffbfdc;
+  border-color: #d6004f;
+  cursor: pointer;
+}
+
+.date.special:hover {
+  background: #ff7ca2;
+  color: white;
+}
+
+.date-number {
+  font-weight: bold;
+  color: #800020;
+}
+
+.date.special img {
+  display: none;
+  max-width: 100%;
+  border-radius: 4px;
+  cursor: zoom-in;
+}
+
+.date.special img:first-of-type {
+  display: block;
+}
+
+
+h1 {
+    text-align: center;
+  }
+
+/* Zoom picture styling and animation */
+.zoom-pic {
+  position: absolute;
+  top: -180px;
+  left: 50%;
+  transform: translateX(-50%) scale(0.8);
+  width: 150px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(204, 0, 68, 0.7);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+  z-index: 20;
+}
+
+.date.special:hover .zoom-pic {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Lightbox overlay */
+#lightbox {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.95);
+  opacity: 0;
+  transition: opacity 0.5s ease; /* Smooth fade */
+}
+
+#lightbox.show {
+  display: block;
+  opacity: 1;
+}
+
+#lightbox img {
+  max-width: 90%;
+  max-height: 80%;
+  transition: transform 0.5s ease; /* Smooth zoom */
+}
+
+#lightbox.show img {
+  transform: scale(1);
+}
+
+#lightbox img.start {
+  transform: scale(0.8);
+}
+
+
+.zoom-pic {
+  cursor: zoom-in;
+}
+
+/* Arrows */
+.lightbox .arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  color: white;
+  background: rgba(0,0,0,0.3);
+  border-radius: 50%;
+  padding: 0.2em 0.5em;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lightbox .arrow.left {
+  left: 20px;
+}
+
+.lightbox .arrow.right {
+  right: 20px;
+}
+
+.lightbox .close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+
+  
+}
+
+#welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    z-index: 2000;
+    opacity: 1;
+    transition: opacity 1s ease;
+    cursor: pointer;
+  }
+  #welcome-screen h1 {
+    animation: fadeInText 2s ease;
+  }
+  @keyframes fadeInText {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  #welcome-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+</style>
+</head>
+<!-- Lightbox gallery -->
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <span class="arrow left">&#10094;</span>
+  <img id="lightbox-img" src="" alt="Zoomed image" />
+  <span class="arrow right">&#10095;</span>
+  <span class="close">&times;</span>
+</div>
+
+<!-- --- ADD JUST BEFORE </body> --- -->
+<!-- lightbox container -->
+<div id="lightbox" class="lightbox" aria-hidden="true">
+  <img id="lightbox-img" src="" alt="Zoomed image" />
+</div>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const welcome = document.getElementById("welcome-screen");
+    welcome.addEventListener("click", function () {
+      welcome.classList.add("fade-out");
+    });
+  });
+  // Create lightbox only once
+  const lightbox = document.createElement('div');
+
+function openLightbox(index) {
+  const lightbox = document.getElementById("lightbox");
+  const img = document.getElementById("lightbox-image");
+  
+  currentImageIndex = index;
+  img.src = images[currentImageIndex].src;
+  img.classList.add("start"); // start smaller
+
+  lightbox.style.display = "block";
+  
+  // Trigger fade + zoom after a small delay
+  setTimeout(() => {
+    lightbox.classList.add("show");
+    img.classList.remove("start");
+  }, 50);
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById("lightbox");
+  lightbox.classList.remove("show");
+  
+  // Wait for fade-out before hiding completely
+  setTimeout(() => {
+    lightbox.style.display = "none";
+  }, 500);
+}
+
+
+  Object.assign(lightbox.style, {
+    display: 'none',
+    position: 'fixed',
+    top: '0',
+    left: '0',
+    width: '100%',
+    height: '100%',
+    background: 'rgba(0,0,0,0.8)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    zIndex: '9999'
+  });
+  document.body.appendChild(lightbox);
+
+  const img = document.createElement('img');
+  Object.assign(img.style, {
+    maxWidth: '90%',
+    maxHeight: '80%',
+    borderRadius: '10px',
+    boxShadow: '0 0 20px rgba(0,0,0,0.5)'
+  });
+  lightbox.appendChild(img);
+
+  const caption = document.createElement('div');
+  Object.assign(caption.style, {
+    position: 'absolute',
+    bottom: '20px',
+    background: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    padding: '8px 12px',
+    borderRadius: '8px',
+    fontSize: '1rem',
+    maxWidth: '80%',
+    textAlign: 'center'
+  });
+  lightbox.appendChild(caption);
+
+  const leftArrow = document.createElement('div');
+  leftArrow.innerHTML = '&#10094;';
+  Object.assign(leftArrow.style, {
+    position: 'absolute', top: '50%', left: '20px',
+    fontSize: '2rem', color: 'white', cursor: 'pointer', userSelect: 'none'
+  });
+  lightbox.appendChild(leftArrow);
+
+  const rightArrow = document.createElement('div');
+  rightArrow.innerHTML = '&#10095;';
+  Object.assign(rightArrow.style, {
+    position: 'absolute', top: '50%', right: '20px',
+    fontSize: '2rem', color: 'white', cursor: 'pointer', userSelect: 'none'
+  });
+  lightbox.appendChild(rightArrow);
+
+  let currentImages = [];
+  let currentIndex = 0;
+
+  // Attach click events AFTER the page is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.date.special').forEach(dateEl => {
+      const imgs = Array.from(dateEl.querySelectorAll('img.zoom-pic')).map(el => ({
+        src: el.src,
+        caption: el.getAttribute('data-caption') || ''
+      }));
+
+      dateEl.addEventListener('click', () => {
+        if (!imgs.length) return;
+        currentImages = imgs;
+        currentIndex = 0;
+        showImage(currentIndex);
+        lightbox.style.display = 'flex';
+      });
+    });
+  });
+
+  function showImage(index) {
+    img.src = currentImages[index].src;
+    caption.textContent = currentImages[index].caption;
+  }
+
+  leftArrow.addEventListener('click', e => {
+    e.stopPropagation();
+    currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+    showImage(currentIndex);
+  });
+
+  rightArrow.addEventListener('click', e => {
+    e.stopPropagation();
+    currentIndex = (currentIndex + 1) % currentImages.length;
+    showImage(currentIndex);
+  });
+
+  lightbox.addEventListener('click', e => {
+    if (e.target === lightbox) {
+      lightbox.style.display = 'none';
+    }
+  });
+
+  // Swipe gestures for mobile
+  let startX = 0;
+  lightbox.addEventListener('touchstart', e => {
+    startX = e.changedTouches[0].clientX;
+  });
+
+  lightbox.addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+    let diff = startX - endX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        currentIndex = (currentIndex + 1) % currentImages.length;
+      } else {
+        currentIndex = (currentIndex - 1 + currentImages.length) % currentImages.length;
+      }
+      showImage(currentIndex);
+    }
+  });
+</script>
+
+
+<body>
+
+<h1>Our Special Dates Calendar 2025</h1>
+
+<!-- March -->
+<div class="month-container">
+  <div class="month-title">March</div>
+  <div class="calendar">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+
+    <!-- March 1 is Saturday, so empty Sun-Fri -->
+    <div class="date empty"></div><div class="date empty"></div><div class="date empty"></div><div class="date empty"></div><div class="date empty"></div><div class="date empty"></div>
+    <div class="date"><span class="date-number">1</span></div>
+
+    <!-- Dates 2 to 6 -->
+    <div class="date"><span class="date-number">2</span></div>
+    <div class="date"><span class="date-number">3</span></div>
+    <div class="date"><span class="date-number">4</span></div>
+    <div class="date"><span class="date-number">5</span></div>
+
+    <!-- Special dates 7th and 8th March -->
+    <div class="date special">
+      <span class="date-number">7</span>
+      <img src="7_3.jpg" alt="7th March" class="zoom-pic" data-caption="Love at first sight 😍😍😍" />
+    </div>
+    <div class="date special">
+      <span class="date-number">8</span>
+      <img src="8_3.jpg" alt="8th March" class="zoom-pic" data-caption="First day, First Date" />
+      <img src="8_3_2.jpg" alt="8th March" class="zoom-pic" data-caption="First day, First Date"/>
+    </div>
+
+    <!-- Dates 9 to 28 -->
+    <div class="date"><span class="date-number">9</span></div>
+    <div class="date"><span class="date-number">10</span></div>
+    <div class="date"><span class="date-number">11</span></div>
+    <div class="date"><span class="date-number">12</span></div>
+    <div class="date"><span class="date-number">13</span></div>
+    <div class="date"><span class="date-number">14</span></div>
+    <div class="date"><span class="date-number">15</span></div>
+    <div class="date"><span class="date-number">16</span></div>
+    <div class="date"><span class="date-number">17</span></div>
+    <div class="date"><span class="date-number">18</span></div>
+    <div class="date"><span class="date-number">19</span></div>
+    <div class="date"><span class="date-number">20</span></div>
+    <div class="date"><span class="date-number">21</span></div>
+    <div class="date"><span class="date-number">22</span></div>
+    <div class="date"><span class="date-number">23</span></div>
+    <div class="date"><span class="date-number">24</span></div>
+    <div class="date"><span class="date-number">25</span></div>
+    <div class="date"><span class="date-number">26</span></div>
+    <div class="date"><span class="date-number">27</span></div>
+
+    <!-- Special date 29th March -->
+    <div class="date special">
+      <span class="date-number">29</span>
+      <img src="29_3_1.jpg" alt="29th March" class="zoom-pic" data-caption="'First' day officially together 🥰" />
+      <img src="29_3_2.jpg" alt="29th March" class="zoom-pic" data-caption="'First' day officially together 🥰"/>
+      <img src="29_3_3.jpg" alt="29th March" class="zoom-pic" data-caption="'First' day officially together 🥰"/>
+      <img src="29_3_4.jpg" alt="29th March" class="zoom-pic" data-caption="'First' day officially together 🥰"/>
+    </div>
+
+    <div class="date"><span class="date-number">30</span></div>
+    <div class="date"><span class="date-number">31</span></div>
+  </div>
+</div>
+
+<!-- April -->
+<div class="month-container">
+  <div class="month-title">April</div>
+  <div class="calendar">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+
+    <!-- April 1 is Tuesday, so empty Sun & Mon -->
+    <div class="date empty"></div><div class="date empty"></div>
+    <div class="date"><span class="date-number">1</span></div>
+    <div class="date"><span class="date-number">2</span></div>
+    <div class="date"><span class="date-number">3</span></div>
+    <div class="date"><span class="date-number">4</span></div>
+    <div class="date"><span class="date-number">5</span></div>
+    <div class="date"><span class="date-number">6</span></div>
+    <div class="date"><span class="date-number">7</span></div>
+    <div class="date"><span class="date-number">8</span></div>
+    <div class="date"><span class="date-number">9</span></div>
+    <div class="date"><span class="date-number">10</span></div>
+    <div class="date"><span class="date-number">11</span></div>
+    <div class="date"><span class="date-number">12</span></div>
+    <div class="date"><span class="date-number">13</span></div>
+
+    <!-- Special date 14th April -->
+    <div class="date special">
+      <span class="date-number">14</span>
+      <img src="14_4_1.jpg" alt="14th April" class="zoom-pic" data-caption="Matching" />
+    </div>
+
+    <!-- Dates 15 to 23 -->
+    <div class="date"><span class="date-number">15</span></div>
+    <div class="date"><span class="date-number">16</span></div>
+    <div class="date"><span class="date-number">17</span></div>
+    <div class="date"><span class="date-number">18</span></div>
+    <div class="date"><span class="date-number">19</span></div>
+    <div class="date"><span class="date-number">20</span></div>
+    <div class="date"><span class="date-number">21</span></div>
+    <div class="date"><span class="date-number">22</span></div>
+    <div class="date"><span class="date-number">23</span></div>
+
+    <!-- Special date 24th April -->
+    <div class="date special">
+      <span class="date-number">24</span>
+      <img src="24_4_1.jpg" alt="24th April" class="zoom-pic" data-caption="😚😚😚😚😚 (🤮 iykyk 😅)"/>
+      <img src="24_4_2.jpg" alt="24th April" class="zoom-pic" data-caption="😚😚😚😚😚 (🤮 iykyk 😅)"/>
+      <img src="24_4_3.jpg" alt="24th April" class="zoom-pic" data-caption="😚😚😚😚😚 (🤮 iykyk 😅)"/>
+      <img src="24_4_4.jpg" alt="24th April" class="zoom-pic" data-caption="😚😚😚😚😚 (🤮 iykyk 😅)"/>
+      <img src="24_4_5.jpg" alt="24th April" class="zoom-pic" data-caption="😚😚😚😚😚 (🤮 iykyk 😅)"/>
+    </div>
+
+    <div class="date"><span class="date-number">25</span></div>
+    <div class="date"><span class="date-number">26</span></div>
+    <div class="date"><span class="date-number">27</span></div>
+    <div class="date"><span class="date-number">28</span></div>
+    <div class="date"><span class="date-number">29</span></div>
+    <div class="date"><span class="date-number">30</span></div>
+  </div>
+</div>
+
+<!-- May -->
+<div class="month-container">
+  <div class="month-title">May</div>
+  <div class="calendar">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+
+    <!-- May 1 is Thursday, so empty Sun-Wed -->
+    <div class="date empty"></div><div class="date empty"></div><div class="date empty"></div><div class="date empty"></div>
+
+    <div class="date"><span class="date-number">1</span></div>
+
+    <!-- Special dates: 2, 10, 12 May -->
+    <div class="date special">
+      <span class="date-number">2</span>
+      <img src="2_5_1.jpg" alt="2nd May" class="zoom-pic" data-caption="😏😏🤭🤭🤭"/>
+    </div>
+    <div class="date"><span class="date-number">3</span></div>
+    <div class="date"><span class="date-number">4</span></div>
+    <div class="date"><span class="date-number">5</span></div>
+    <div class="date"><span class="date-number">6</span></div>
+    <div class="date"><span class="date-number">7</span></div>
+    <div class="date"><span class="date-number">8</span></div>
+    <div class="date"><span class="date-number">9</span></div>
+
+    <div class="date special">
+      <span class="date-number">10</span>
+      <img src="10_5_1.jpg" alt="10th May" class="zoom-pic" data-caption="Lifetime Memorabilia"/>
+    </div>
+
+    <div class="date"><span class="date-number">11</span></div>
+
+    <div class="date special" id="videoWrapper">
+  <span class="date-number">12</span>
+  <video id="video12" class="zoom-pic" muted playsinline>
+    <source src="12_6_1.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<script>
+const wrapper = document.getElementById('videoWrapper');
+const video = document.getElementById('video12');
+
+wrapper.addEventListener('click', () => {
+  if (!document.fullscreenElement) {
+    if (video.requestFullscreen) {
+      video.requestFullscreen();
+    } else if (video.webkitRequestFullscreen) {
+      video.webkitRequestFullscreen();
+    } else if (video.msRequestFullscreen) {
+      video.msRequestFullscreen();
+    }
+  }
+  video.play();
+});
+</script>
+
+    <!-- Remaining dates -->
+    <div class="date"><span class="date-number">13</span></div>
+    <div class="date"><span class="date-number">14</span></div>
+    <div class="date"><span class="date-number">15</span></div>
+    <div class="date"><span class="date-number">16</span></div>
+    <div class="date"><span class="date-number">17</span></div>
+    <div class="date"><span class="date-number">18</span></div>
+    <div class="date"><span class="date-number">19</span></div>
+    <div class="date"><span class="date-number">20</span></div>
+    <div class="date"><span class="date-number">21</span></div>
+    <div class="date"><span class="date-number">22</span></div>
+    <div class="date"><span class="date-number">23</span></div>
+    <div class="date"><span class="date-number">24</span></div>
+    <div class="date"><span class="date-number">25</span></div>
+    <div class="date"><span class="date-number">26</span></div>
+    <div class="date"><span class="date-number">27</span></div>
+    <div class="date"><span class="date-number">28</span></div>
+    <div class="date"><span class="date-number">29</span></div>
+    <div class="date"><span class="date-number">30</span></div>
+    <div class="date"><span class="date-number">31</span></div>
+  </div>
+</div>
+
+<!-- June -->
+<div class="month-container">
+  <div class="month-title">June</div>
+  <div class="calendar">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+
+    <!-- June 1 is Sunday -->
+    <div class="date"><span class="date-number">1</span></div>
+    <div class="date"><span class="date-number">2</span></div>
+    <div class="date"><span class="date-number">3</span></div>
+    <div class="date"><span class="date-number">4</span></div>
+    <div class="date"><span class="date-number">5</span></div>
+    <div class="date"><span class="date-number">6</span></div>
+    <div class="date"><span class="date-number">7</span></div>
+    <div class="date"><span class="date-number">8</span></div>
+    <div class="date"><span class="date-number">9</span></div>
+
+    <!-- Special date 25th June -->
+    <div class="date special">
+      <span class="date-number">25</span>
+      <img src="25_6_1.jpg" alt="25th June" class="zoom-pic" data-caption="Online days 🥲" />
+    </div>
+
+    <div class="date"><span class="date-number">10</span></div>
+    <div class="date"><span class="date-number">11</span></div>
+    <div class="date"><span class="date-number">12</span></div>
+    <div class="date"><span class="date-number">13</span></div>
+    <div class="date"><span class="date-number">14</span></div>
+    <div class="date"><span class="date-number">15</span></div>
+    <div class="date"><span class="date-number">16</span></div>
+    <div class="date"><span class="date-number">17</span></div>
+    <div class="date"><span class="date-number">18</span></div>
+    <div class="date"><span class="date-number">19</span></div>
+    <div class="date"><span class="date-number">20</span></div>
+    <div class="date"><span class="date-number">21</span></div>
+    <div class="date"><span class="date-number">22</span></div>
+    <div class="date"><span class="date-number">23</span></div>
+    <div class="date"><span class="date-number">24</span></div>
+    <div class="date"><span class="date-number">26</span></div>
+    <div class="date"><span class="date-number">27</span></div>
+    <div class="date"><span class="date-number">28</span></div>
+    <div class="date"><span class="date-number">29</span></div>
+    <div class="date"><span class="date-number">30</span></div>
+  </div>
+</div>
+
+<!-- July -->
+<div class="month-container">
+  <div class="month-title">July</div>
+  <div class="calendar">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+
+    <!-- July 1 is Tuesday, so empty Sun & Mon -->
+    <div class="date empty"></div><div class="date empty"></div>
+
+    <div class="date"><span class="date-number">1</span></div>
+    <div class="date"><span class="date-number">2</span></div>
+    <div class="date"><span class="date-number">3</span></div>
+    <div class="date"><span class="date-number">4</span></div>
+    <div class="date"><span class="date-number">5</span></div>
+    <div class="date"><span class="date-number">6</span></div>
+    <div class="date"><span class="date-number">7</span></div>
+    <div class="date"><span class="date-number">8</span></div>
+    <div class="date"><span class="date-number">9</span></div>
+    <div class="date"><span class="date-number">10</span></div>
+    <div class="date"><span class="date-number">11</span></div>
+    <div class="date"><span class="date-number">12</span></div>
+    <div class="date"><span class="date-number">13</span></div>
+    <div class="date"><span class="date-number">14</span></div>
+    <div class="date"><span class="date-number">15</span></div>
+    <div class="date"><span class="date-number">16</span></div>
+    <div class="date"><span class="date-number">17</span></div>
+    <div class="date"><span class="date-number">18</span></div>
+    <div class="date"><span class="date-number">19</span></div>
+    <div class="date"><span class="date-number">20</span></div>
+    <div class="date"><span class="date-number">21</span></div>
+    <div class="date"><span class="date-number">22</span></div>
+    <div class="date"><span class="date-number">23</span></div>
+    <div class="date"><span class="date-number">24</span></div>
+    
+    <div class="date special">
+      <span class="date-number">25</span>
+      <img src="26_7_1.jpg" alt="25th July" class="zoom-pic" data-caption="No reunion pics 😢"/>
+    </div>
+
+    <div class="date"><span class="date-number">26</span></div>
+    <div class="date"><span class="date-number">27</span></div>
+    <div class="date"><span class="date-number">28</span></div>
+    <div class="date"><span class="date-number">29</span></div>
+    <div class="date"><span class="date-number">30</span></div>
+    <div class="date"><span class="date-number">31</span></div>
+  </div>
+</div>
+
+
+<!-- August -->
+<div class="month-container">
+  <div class="month-title">August</div>
+  <div class="calendar">
+    <div class="day-name">Sun</div><div class="day-name">Mon</div><div class="day-name">Tue</div><div class="day-name">Wed</div><div class="day-name">Thu</div><div class="day-name">Fri</div><div class="day-name">Sat</div>
+
+    <!-- August 1 is Friday, so empty Sun-Thu -->
+    <div class="date empty"></div><div class="date empty"></div><div class="date empty"></div><div class="date empty"></div><div class="date empty"></div>
+
+    <div class="date"><span class="date-number">1</span></div>
+
+    <!-- Special dates 2nd and 3rd August -->
+    <div class="date special">
+      <span class="date-number">2</span>
+      <img src="2_8_1.jpg" alt="2nd August" class="zoom-pic" />
+      <img src="2_8_2.jpg" alt="2nd August" class="zoom-pic" />
+      <img src="2_8_3.jpg" alt="2nd August" class="zoom-pic" />
+    </div>
+    <div class="date special">
+      <span class="date-number">3</span>
+      <img src="3_8_1.jpg" alt="3rd August" class="zoom-pic" />
+      <img src="3_8_2.jpg" alt="3rd August" class="zoom-pic" />
+      <img src="3_8_3.jpg" alt="3rd August" class="zoom-pic" />
+    </div>
+
+    <!-- Remaining dates -->
+    <div class="date"><span class="date-number">4</span></div>
+    <div class="date"><span class="date-number">5</span></div>
+    <div class="date"><span class="date-number">6</span></div>
+    <div class="date"><span class="date-number">7</span></div>
+    <div class="date"><span class="date-number">8</span></div>
+    <div class="date"><span class="date-number">9</span></div>
+    <div class="date"><span class="date-number">10</span></div>
+    <div class="date"><span class="date-number">11</span></div>
+    <div class="date"><span class="date-number">12</span></div>
+    <div class="date"><span class="date-number">13</span></div>
+    <div class="date"><span class="date-number">14</span></div>
+    <div class="date"><span class="date-number">15</span></div>
+    <div class="date"><span class="date-number">16</span></div>
+    <div class="date"><span class="date-number">17</span></div>
+    <div class="date"><span class="date-number">18</span></div>
+    <div class="date"><span class="date-number">19</span></div>
+    <div class="date"><span class="date-number">20</span></div>
+    <div class="date"><span class="date-number">21</span></div>
+    <div class="date"><span class="date-number">22</span></div>
+    <div class="date"><span class="date-number">23</span></div>
+    <div class="date"><span class="date-number">24</span></div>
+    <div class="date"><span class="date-number">25</span></div>
+    <div class="date"><span class="date-number">26</span></div>
+    <div class="date"><span class="date-number">27</span></div>
+    <div class="date"><span class="date-number">28</span></div>
+    <div class="date"><span class="date-number">29</span></div>
+    <div class="date"><span class="date-number">30</span></div>
+    <div class="date"><span class="date-number">31</span></div>
+  </div>
+</div>
+
+</body>
+</html>
